@@ -26,8 +26,12 @@ class ImageClassifierService:
         :return: image classification
         """
         # get the image
-        response = requests.get(image_path)
-        img = Image.open(BytesIO(response.content))
+        if image_path.startswith('https://'):
+            response = requests.get(image_path)
+            img = Image.open(BytesIO(response.content))
+        else:
+            # load image from local path
+            img = image.load_img(image_path)
 
         # resize the image according to imagenet model's requirement
         img = img.resize((299, 299))
